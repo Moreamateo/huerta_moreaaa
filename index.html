@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+  <!DOCTYPE html>
   <html lang="es">
   <head>
   <meta charset="UTF-8">
@@ -517,11 +517,93 @@
       font-size:0.75rem;
       color:#8b8171;
     }
+
+    /* ---------- MENÚ DE NAVEGACIÓN ---------- */
+    .nav-principal{
+      position:sticky;
+      top:0;
+      z-index:100;
+      background:var(--soil);
+      border-bottom:3px solid var(--harvest);
+      box-shadow:0 4px 18px rgba(36,31,25,0.18);
+    }
+    .nav-inner{
+      max-width:960px;
+      margin:0 auto;
+      padding:0 12px;
+      display:flex;
+      align-items:center;
+      gap:4px;
+      overflow-x:auto;
+      -webkit-overflow-scrolling:touch;
+      scrollbar-width:thin;
+    }
+    .nav-inner::-webkit-scrollbar{ height:4px; }
+    .nav-inner::-webkit-scrollbar-thumb{ background:var(--leaf-light); border-radius:4px; }
+
+    .nav-btn{
+      flex:0 0 auto;
+      background:transparent;
+      border:none;
+      color:#DCD2C2;
+      font-family:'Work Sans', sans-serif;
+      font-size:0.88rem;
+      font-weight:500;
+      padding:16px 18px;
+      cursor:pointer;
+      position:relative;
+      transition:color .2s ease, background .2s ease;
+      white-space:nowrap;
+      text-decoration:none;
+      display:inline-block;
+    }
+    .nav-btn:hover{
+      color:#fff;
+      background:rgba(255,255,255,0.06);
+    }
+    .nav-btn.activo{
+      color:var(--harvest);
+      font-weight:600;
+    }
+    .nav-btn.activo::after{
+      content:"";
+      position:absolute;
+      left:18px; right:18px; bottom:0;
+      height:3px;
+      background:var(--harvest);
+      border-radius:3px 3px 0 0;
+    }
+    a.nav-link{
+      color:#DCD2C2;
+    }
+
+    /* Secciones: por defecto ocultas excepto la activa */
+    .pagina-seccion{ display:none; }
+    .pagina-seccion.activa{ display:block; }
+
+    /* Ajuste de padding del hero cuando está dentro del sistema de secciones */
+    .hero.pagina-seccion.activa{ padding-top:48px; }
+
+    @media (max-width:600px){
+      .nav-btn{ padding:14px 14px; font-size:0.82rem; }
+    }
   </style>
   </head>
   <body>
 
-  <header class="hero">
+  <!-- MENÚ DE NAVEGACIÓN -->
+  <nav class="nav-principal" aria-label="Navegación principal">
+    <div class="nav-inner">
+      <button type="button" class="nav-btn activo" data-seccion="inicio">Inicio</button>
+      <button type="button" class="nav-btn" data-seccion="objetivo">Objetivo</button>
+      <button type="button" class="nav-btn" data-seccion="funcionamiento">Funcionamiento</button>
+      <button type="button" class="nav-btn" data-seccion="especies">Cultivos</button>
+      <button type="button" class="nav-btn" data-seccion="cronograma">Cronograma</button>
+      <a href="calendario.html" class="nav-btn nav-link">Calendario</a>
+    </div>
+  </nav>
+
+  <header class="hero pagina-seccion activa" data-seccion="inicio">
     <span class="eyebrow">Escuela de Educación Secundaria Técnica N°1 · Miramar · 6° Año Informática</span>
     <h1>Huerta Escolar <span>Inteligente</span> y Solidaria</h1>
     <p class="lead">
@@ -539,7 +621,7 @@
     </div>
   </header>
 
-  <section class="objetivo">
+  <section class="objetivo pagina-seccion" data-seccion="objetivo">
     <div class="objetivo-inner">
       <div>
         <span class="eyebrow">Objetivo</span>
@@ -554,7 +636,7 @@
     </div>
   </section>
 
-  <section class="funcionamiento" id="funcionamiento">
+  <section class="funcionamiento pagina-seccion" id="funcionamiento" data-seccion="funcionamiento">
     <span class="eyebrow">Funcionamiento</span>
     <h2>Cómo funciona la huerta</h2>
     <p class="intro">
@@ -624,7 +706,7 @@
     </div>
   </section>
 
-  <section class="especies" id="especies">
+  <section class="especies pagina-seccion" id="especies" data-seccion="especies">
     <span class="eyebrow">Especies cultivadas</span>
     <h2>Tres zonas, tres cultivos</h2>
     <p>Cada cantero tiene su propio sensor de humedad de suelo. Tocá una tarjeta para ver una lectura simulada.</p>
@@ -690,7 +772,7 @@
       </div>
   </section>
 
-  <section class="cronograma" id="cronograma">
+  <section class="cronograma pagina-seccion" id="cronograma" data-seccion="cronograma">
     <div class="cronograma-inner">
       <span class="eyebrow">Cronograma</span>
       <h2>Plan de tareas</h2>
@@ -772,6 +854,30 @@
   </footer>
 
   <script>
+    // ---- Navegación por secciones (menú horizontal) ----
+    const botonesNav = document.querySelectorAll('.nav-btn');
+    const secciones = document.querySelectorAll('.pagina-seccion');
+
+    function mostrarSeccion(nombre) {
+      secciones.forEach(sec => {
+        sec.classList.toggle('activa', sec.dataset.seccion === nombre);
+      });
+      botonesNav.forEach(btn => {
+        btn.classList.toggle('activo', btn.dataset.seccion === nombre);
+      });
+      // Sube suavemente al inicio del contenido
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    botonesNav.forEach(btn => {
+      btn.addEventListener('click', () => {
+        mostrarSeccion(btn.dataset.seccion);
+      });
+    });
+
+    // Al cargar siempre empieza en Inicio
+    mostrarSeccion('inicio');
+
     // ---- Funcionalidad 1: checklist de cronograma con barra de progreso ----
     const tareas = document.querySelectorAll('#listaTareas .tarea');
     const progresoFill = document.getElementById('progresoFill');
