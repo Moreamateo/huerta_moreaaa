@@ -1,0 +1,2 @@
+El proyecto es una guia visual y clara de todo lo que conlleva nuestra huerta aparte de información extra , como contadores de dia para la muestra, indicaciones para plantar e información sobre el estado de cada planta. los creadores de sta pagina somos: Lautaro Coronel, Mateo Morea y Nicolas Barrales.
+Esta es la url para acceder a la pagina:"https://moreamateo.github.io/huerta_moreaaa/"
