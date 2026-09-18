@@ -587,6 +587,107 @@
     @media (max-width:600px){
       .nav-btn{ padding:14px 14px; font-size:0.82rem; }
     }
+
+    /* ---------- INTERACTIVO: ¿Qué plantar? + cuenta regresiva ---------- */
+    .interactivo{
+      max-width:960px;
+      margin:0 auto 40px;
+      padding:0 28px;
+      display:grid;
+      grid-template-columns:1.2fr 1fr;
+      gap:18px;
+    }
+    @media (max-width:700px){
+      .interactivo{ grid-template-columns:1fr; }
+    }
+    .caja-interactiva{
+      background:#fff;
+      border:1px solid var(--paper-dark);
+      border-radius:var(--radius);
+      padding:20px 22px;
+    }
+    .caja-interactiva .sub{
+      font-family:'JetBrains Mono', monospace;
+      font-size:0.7rem;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+      color:var(--water);
+      display:block;
+      margin-bottom:6px;
+    }
+    .caja-interactiva h3{
+      font-size:1.15rem;
+      margin-bottom:12px;
+    }
+    .selector-mes{
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+      margin-bottom:14px;
+    }
+    .selector-mes button{
+      font-family:'Work Sans', sans-serif;
+      font-size:0.8rem;
+      padding:7px 12px;
+      border-radius:20px;
+      border:1px solid var(--paper-dark);
+      background:var(--paper);
+      color:var(--soil);
+      cursor:pointer;
+      transition:background .15s ease, color .15s ease, border-color .15s ease;
+    }
+    .selector-mes button:hover{
+      border-color:var(--leaf);
+      color:var(--leaf);
+    }
+    .selector-mes button.activo{
+      background:var(--leaf);
+      border-color:var(--leaf);
+      color:#fff;
+    }
+    #resultadoPlantar{
+      font-size:0.92rem;
+      color:#4a4238;
+      min-height:48px;
+      line-height:1.45;
+    }
+    #resultadoPlantar strong{ color:var(--soil); }
+
+    .cuenta-regresiva{
+      text-align:center;
+    }
+    .cuenta-numeros{
+      display:flex;
+      justify-content:center;
+      gap:12px;
+      margin:14px 0 8px;
+    }
+    .cuenta-bloque{
+      background:var(--paper);
+      border-radius:10px;
+      padding:10px 12px;
+      min-width:64px;
+    }
+    .cuenta-bloque .num{
+      font-family:'Fraunces', serif;
+      font-size:1.6rem;
+      font-weight:600;
+      color:var(--water);
+      display:block;
+      line-height:1.1;
+    }
+    .cuenta-bloque .lbl{
+      font-family:'JetBrains Mono', monospace;
+      font-size:0.65rem;
+      text-transform:uppercase;
+      letter-spacing:.06em;
+      color:#6b6156;
+    }
+    .cuenta-texto{
+      font-size:0.82rem;
+      color:#6b6156;
+      margin:0;
+    }
   </style>
   </head>
   <body>
@@ -618,6 +719,40 @@
       <div class="stat"><div class="num">200 L</div><div class="lbl">Tanque de agua de lluvia</div></div>
       <div class="stat"><div class="num">12 V</div><div class="lbl">Tensión de todo el sistema</div></div>
       <div class="stat"><div class="num">&lt;40% / &gt;95%</div><div class="lbl">Umbral que enciende / apaga el riego</div></div>
+    </div>
+
+    <!-- Bloque interactivo: responde al usuario -->
+    <div class="interactivo" style="margin-top:36px; padding:0;">
+      <div class="caja-interactiva">
+        <span class="sub">Selector</span>
+        <h3>¿Qué plantar este mes?</h3>
+        <div class="selector-mes" id="selectorMes">
+          <button type="button" data-mes="0">Ene</button>
+          <button type="button" data-mes="1">Feb</button>
+          <button type="button" data-mes="2">Mar</button>
+          <button type="button" data-mes="3">Abr</button>
+          <button type="button" data-mes="4">May</button>
+          <button type="button" data-mes="5">Jun</button>
+          <button type="button" data-mes="6">Jul</button>
+          <button type="button" data-mes="7">Ago</button>
+          <button type="button" data-mes="8">Sep</button>
+          <button type="button" data-mes="9">Oct</button>
+          <button type="button" data-mes="10">Nov</button>
+          <button type="button" data-mes="11">Dic</button>
+        </div>
+        <div id="resultadoPlantar">Elegí un mes para ver qué conviene sembrar en Miramar.</div>
+      </div>
+
+      <div class="caja-interactiva cuenta-regresiva">
+        <span class="sub">Cuenta regresiva</span>
+        <h3>Día de la muestra</h3>
+        <div class="cuenta-numeros">
+          <div class="cuenta-bloque"><span class="num" id="cdDias">--</span><span class="lbl">días</span></div>
+          <div class="cuenta-bloque"><span class="num" id="cdHoras">--</span><span class="lbl">horas</span></div>
+          <div class="cuenta-bloque"><span class="num" id="cdMins">--</span><span class="lbl">min</span></div>
+        </div>
+        <p class="cuenta-texto">Faltan para la presentación de la Huerta Escolar.</p>
+      </div>
     </div>
   </header>
 
@@ -877,6 +1012,63 @@
 
     // Al cargar siempre empieza en Inicio
     mostrarSeccion('inicio');
+
+    // ---- Interactivo: ¿Qué plantar este mes? + cuenta regresiva ----
+    const siembraPorMes = {
+      0:  '<strong>Enero (verano):</strong> Cosecha de zapallo. Mantener acelga con riego. Evitar espinaca (se espiga).',
+      1:  '<strong>Febrero (verano):</strong> Última cosecha de zapallo. Acelga con sombra parcial. Preparar canteros para otoño.',
+      2:  '<strong>Marzo (otoño):</strong> Ideal para <strong>acelga</strong> y <strong>espinaca</strong>. Nueva siembra escalonada.',
+      3:  '<strong>Abril (otoño):</strong> Seguir con acelga y espinaca. Buen momento para brócoli y zanahoria.',
+      4:  '<strong>Mayo (otoño):</strong> Espinaca y acelga en pleno crecimiento. Proteger de primeras heladas.',
+      5:  '<strong>Junio (invierno):</strong> Acelga y espinaca resisten el frío. Sembrar ajo y habas.',
+      6:  '<strong>Julio (invierno):</strong> Mantenimiento de acelga/espinaca. Abonar canteros. Planificar zapallo.',
+      7:  '<strong>Agosto (invierno):</strong> Almácigos de zapallo bajo protección. Seguir con hojas verdes.',
+      8:  '<strong>Septiembre (primavera):</strong> Siembra de <strong>zapallo</strong>, acelga y espinaca. ¡Época ideal!',
+      9:  '<strong>Octubre (primavera):</strong> Trasplante de zapallo. Siembra escalonada de acelga y espinaca.',
+      10: '<strong>Noviembre (primavera):</strong> Crecimiento de zapallo. Cosecha temprana de hojas verdes.',
+      11: '<strong>Diciembre (verano):</strong> Riego intensivo del zapallo. Acelga tolerante. Evitar nueva espinaca.'
+    };
+
+    const selectorMes = document.getElementById('selectorMes');
+    const resultadoPlantar = document.getElementById('resultadoPlantar');
+    const mesActual = new Date().getMonth();
+
+    if (selectorMes && resultadoPlantar) {
+      const botonesMes = selectorMes.querySelectorAll('button');
+      botonesMes.forEach(btn => {
+        btn.addEventListener('click', () => {
+          botonesMes.forEach(b => b.classList.remove('activo'));
+          btn.classList.add('activo');
+          const m = parseInt(btn.dataset.mes, 10);
+          resultadoPlantar.innerHTML = siembraPorMes[m];
+        });
+      });
+      // Marca el mes actual al cargar
+      const btnActual = selectorMes.querySelector('button[data-mes="' + mesActual + '"]');
+      if (btnActual) {
+        btnActual.classList.add('activo');
+        resultadoPlantar.innerHTML = siembraPorMes[mesActual];
+      }
+    }
+
+    // Cuenta regresiva hasta el día de la muestra (cambiar la fecha si hace falta)
+    const fechaMuestra = new Date('2026-11-18T09:00:00'); // ← día de la muestra (18 de noviembre)
+    function actualizarCuenta() {
+      const ahora = new Date();
+      let diff = fechaMuestra - ahora;
+      if (diff < 0) diff = 0;
+      const dias  = Math.floor(diff / (1000 * 60 * 60 * 24));
+      const horas = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const mins  = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+      const elD = document.getElementById('cdDias');
+      const elH = document.getElementById('cdHoras');
+      const elM = document.getElementById('cdMins');
+      if (elD) elD.textContent = dias;
+      if (elH) elH.textContent = horas;
+      if (elM) elM.textContent = mins;
+    }
+    actualizarCuenta();
+    setInterval(actualizarCuenta, 60000); // actualiza cada minuto
 
     // ---- Funcionalidad 1: checklist de cronograma con barra de progreso ----
     const tareas = document.querySelectorAll('#listaTareas .tarea');
